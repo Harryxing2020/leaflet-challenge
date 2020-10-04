@@ -14,30 +14,31 @@ L.tileLayer("https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_toke
     accessToken: API_KEY
 }).addTo(myMap);
 
-link = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_month.geojson";
+link = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/2.5_week.geojson";
 
-function getColor(mag){
-if (mag > 5) {
-    return '#FF4500';
-  }
-  else if (mag >= 4 && mag <= 5) {
-    return '#FF8C00';
-  }
-  else if (mag >= 3 && mag <= 4) {
-    return '#FFA500';
-  }
-  else if (mag >= 2 && mag <= 3) {
-    return '#FFD700';
-  }
-  else if (mag >= 1 && mag <= 2) {
-    return '#ADFF2F';
-  }
-  else if (mag >= 0 && mag <= 1) {
-    return '#7FFF00';
-  }
-  else {
-    return '#fff';
-  }
+function getColor(depth) {
+
+    if (depth > 90) {
+        return '#cb5554';
+    }
+    else if (depth > 70 && depth <= 90) {
+        return '#d37164';
+    }
+    else if (depth > 50 && depth <= 70) {
+        return '#dc8d73';
+    }
+    else if (depth > 30 && depth <= 50) {
+        return '#e5aa83';
+    }
+    else if (depth > 10 && depth <= 30) {
+        return '#f6e2a2';
+    }
+    else if (depth >= -10 && depth <= 10) {
+        return '#ffffb2';
+    }
+    else {
+        return '#fff';
+    }
 }
 
 
@@ -67,35 +68,44 @@ d3.json(link, function (data) {
         };
     });
 
-
-
-
-
     earthquakeLocations.forEach(element => {
 
-        // console.log(element);
-        var color = "red"
-        // if (location.depth >= 200) {
-        //     color = "yellow"
-        // } else if (country.points >= 100) {
-        //     color = "blue"
-        // } else if (country.points >= 90) {
-        //     color = "green"
-        // }
-    
+
+        popupString = "<h1>" + element.place + "</h1> <hr> <h3>Magnitude:" + element.mag + "</h3>";
+
+        popupString += "<h3>Depth:" + element.depth + " KM</h3>";
+
         L.circle(element.location, {
             fillOpacity: 0.75,
-            color: "white",
-            fillColor: color,
+            color: "yellow",
+            fillColor: getColor(element.depth),
             radius: markerSize(element.mag)
-        }).bindPopup("<h1>" + element.place + "</h1> <hr> <h3>Points: " + element.mag + "</h3>").addTo(myMap);
-    
-    
+        }).bindPopup(popupString).addTo(myMap);
+
     })
-
-    
-
+    //////////////////////////////////////////////////////////////////////////////////////////////
 
 
+    var legend = L.control({ position: 'bottomright' });
+
+    legend.onAdd = function () {
+
+        var div = L.DomUtil.create('div', 'info legend');
+        var limits = ["-10", "10",  "30", "50","70", "90"];
+        var colors = ["#ffffb2", "#f6e2a2", "#e5aa83", "#dc8d73", "#d37164", "#cb5554"];
+
+        for (var i = 0; i < limits.length; i++) {
+            var newHtml = '<i style="background:' + colors[i] + '"></i> ' + limits[i] + (limits[i + 1] ? '&ndash;' + limits[i + 1] + '<br>' : '+');
+            div.innerHTML += newHtml;
+        }
+
+        return div;
+    };
+
+    legend.addTo(myMap);
 })
+
+
+
+
 
