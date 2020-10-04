@@ -16,35 +16,6 @@ L.tileLayer("https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_toke
 
 link = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_month.geojson";
 
-function getColor(mag){
-if (mag > 5) {
-    return '#FF4500';
-  }
-  else if (mag >= 4 && mag <= 5) {
-    return '#FF8C00';
-  }
-  else if (mag >= 3 && mag <= 4) {
-    return '#FFA500';
-  }
-  else if (mag >= 2 && mag <= 3) {
-    return '#FFD700';
-  }
-  else if (mag >= 1 && mag <= 2) {
-    return '#ADFF2F';
-  }
-  else if (mag >= 0 && mag <= 1) {
-    return '#7FFF00';
-  }
-  else {
-    return '#fff';
-  }
-}
-
-
-function markerSize(mag) {
-
-    return mag * 13000;
-}
 
 // Grabbing our GeoJSON data..
 d3.json(link, function (data) {
@@ -69,7 +40,10 @@ d3.json(link, function (data) {
 
 
 
+    function markerSize(mag) {
 
+        return mag * 13000;
+    }
 
     earthquakeLocations.forEach(element => {
 
