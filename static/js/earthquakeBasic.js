@@ -67,11 +67,13 @@ function markerSize(mag) {
 ///////////////////////////////////////////////////////////////////////
 d3.json(earthquakeUrl, function (data) {
 
+
     var earthquakeLocations = [];
 
     // get each location data from array 
     data.features.forEach(element => {
 
+        console.log(element.geometry.coordinates);
         // if the coordinates is not empty
         if (element.geometry.coordinates) {
 
