@@ -64,6 +64,7 @@ function markerSize(mag) {
 // function3: initial map 
 ///////////////////////////////////////////////////////////////////////
 function initialMap(coordinates) {
+    //create a map
     var myMap = L.map("map", {
         center: coordinates,
         zoom: 5

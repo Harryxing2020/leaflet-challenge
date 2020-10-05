@@ -22,17 +22,13 @@ d3.json(newtry, function (response) {
 
     // Create a new marker cluster group
     var markers = L.markerClusterGroup();
-
-    // var markers = L.markerClusterGroup({
-    //     maxClusterRadius: 200
-    // });
-
+    // for each the array in feature
     response.features.forEach(element => {
         var location = element.geometry.coordinates;
 
         // Check for location property
         if (location) {
-
+            // create a popup marker
             var popupString = `<h3>Earthquake near ${element.properties.place}</h3>`;
             popupString += `<h3>Coordinates: ${location[0]}, ${location[1]}</h3> <hr>`;
             popupString += `<h3>Magnitude: ${element.properties.mag}</h3>`;
@@ -46,8 +42,7 @@ d3.json(newtry, function (response) {
 
 
     });
-
-
+    // add the cluster marker into map
     myMap.addLayer(markers);
 
 });

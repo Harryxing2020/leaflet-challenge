@@ -1,3 +1,4 @@
+// create a map 
 var myMap = L.map("map", {
     center: [32.710181, -123.224670],
     zoom: 3,
@@ -12,23 +13,25 @@ L.tileLayer("https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_toke
     accessToken: API_KEY
 }).addTo(myMap);
 
+
+//grabbing all data from earthquake json
 var newtry = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_month.geojson";
 
+
+// Perform a GET request to earthquake data json
 d3.json(newtry, function (response) {
     var heatArray = [];
     response.features.forEach(element => {
         var location = element.geometry.coordinates;
         // if the coordinates is not empty
         if (location) {
-            //define a json 
+            //add coordinates and magnitude as heat value
             heatArray.push([location[1],location[0], location[2]]);
         };
     })
 
-
-    console.log(heatArray.length)
-
-    var heat = L.heatLayer(heatArray, {
+    // create a heat map and add it to map
+    L.heatLayer(heatArray, {
         radius: 25,
         blur: 10
     }).addTo(myMap)
