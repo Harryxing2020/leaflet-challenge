@@ -42,6 +42,44 @@ function markerSize(mag) {
 ///////////////////////////////////////////////////////////////////////
 
 
+///////////////////////////////////////////////////////////////////////
+// function3: create legends
+///////////////////////////////////////////////////////////////////////
+
+function addLegend() {
+    // Create a legend for the map
+    var legend = L.control({ position: 'bottomright' });
+    // Legend will be called once map is displayed
+    legend.onAdd = function () {
+
+        var div = L.DomUtil.create('div', 'info legend');
+
+        var legendInfo = "<p>Depth(KM)</p>";
+
+        div.innerHTML = legendInfo;
+
+        // setup the depth 
+        var limits = [-10, 10, 30, 50, 70, 90];
+        // Loop through our magnitude intervals and generate a label with a colored square for each interval
+        for (var i = 0; i < limits.length; i++) {
+            var newHtml = `<i style="background: ${getColor(limits[i])}"></i>`;
+
+            newHtml += limits[i] + (limits[i + 1] ? '&ndash;' + limits[i + 1] + '<br>' : '+');
+
+            div.innerHTML += newHtml;
+        }
+
+        return div;
+    };
+    // Add the legend to the map
+    return legend;
+
+}
+///////////////////////////////////////////////////////////////////////
+// function3: end
+///////////////////////////////////////////////////////////////////////
+
+
 
 // Store our API endpoint inside queryUrl
 var earthquakeUrl = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/2.5_month.geojson";
@@ -109,7 +147,7 @@ function createMap(earthquakes, tectonicplates) {
     });
 
     var grayscaleMap = L.tileLayer("https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}", {
-         tileSize: 512,
+        tileSize: 512,
         maxZoom: 18,
         zoomOffset: -1,
         id: "mapbox/light-v9",
@@ -117,11 +155,11 @@ function createMap(earthquakes, tectonicplates) {
     });
 
 
-    var outdoorMap =L.tileLayer("https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}", {
+    var outdoorMap = L.tileLayer("https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}", {
         maxZoom: 18,
         id: "mapbox.streets",
         accessToken: API_KEY
-      });
+    });
 
 
     // Define a baseMaps object to hold our base layers
@@ -151,4 +189,7 @@ function createMap(earthquakes, tectonicplates) {
         collapsed: false
     }).addTo(myMap);
 
+    
+    addLegend().addTo(myMap);
 }
+
