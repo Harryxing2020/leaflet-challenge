@@ -16,7 +16,7 @@ L.tileLayer("https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_toke
 // Store API query variables
 var newtry = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_month.geojson";
 
-
+d3.select("#bar-title").text("Earthquake claster Map all data in the past 30 days ")
 // Grab the data with d3
 d3.json(newtry, function (response) {
 

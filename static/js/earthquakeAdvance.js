@@ -8,7 +8,7 @@ var earthquakeUrl = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/2
 // tectonicplate data url
 var tectonicplatesUrl = "https://raw.githubusercontent.com/fraxen/tectonicplates/master/GeoJSON/PB2002_boundaries.json";
 
-d3.select("#bar-title").text("Earthquake M2.5+ data With Tectonic Plates in the past 30 days ")
+d3.select("#bar-title").text("Advance earthquake map. M2.5+ data With Tectonic Plates in the past 30 days ")
 
 
 // Perform a GET request to earthquake data json

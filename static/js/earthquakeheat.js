@@ -13,6 +13,7 @@ L.tileLayer("https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_toke
     accessToken: API_KEY
 }).addTo(myMap);
 
+d3.select("#bar-title").text("Heat Earthquake map. All data in the past 30 days ")
 
 //grabbing all data from earthquake json
 var newtry = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_month.geojson";

@@ -3,11 +3,11 @@
 // Main entrance 
 ///////////////////////////////////////////////////////////////////////
 // inital the map and set the center of map at 60.387172, -153.991983
-var myMap = initialMap([60.387172, -153.991983]);
+var myMap = initialMap([59.912786, -54.506261]);
 // Json URL for the earthquake above 2.5 
 var earthquakeUrl = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/2.5_month.geojson";
 
-d3.select("#bar-title").text("Earthquake M2.5+ data in the past 30 days ")
+d3.select("#bar-title").text("Basic earthquake map M2.5+ data in the past 30 days ")
 
 //grabbing GeoJson
 grabbingGeoJson(earthquakeUrl, myMap)
@@ -69,7 +69,7 @@ function initialMap(coordinates) {
     //create a map
     var myMap = L.map("map", {
         center: coordinates,
-        zoom: 5
+        zoom: 3
     });
 
     // Adding tile layer
