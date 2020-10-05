@@ -7,6 +7,8 @@ var myMap = initialMap([60.387172, -153.991983]);
 // Json URL for the earthquake above 2.5 
 var earthquakeUrl = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/2.5_month.geojson";
 
+d3.select("#bar-title").text("Earthquake M2.5+ data in the past 30 days ")
+
 //grabbing GeoJson
 grabbingGeoJson(earthquakeUrl, myMap)
 
