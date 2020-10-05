@@ -1,24 +1,22 @@
+
 ///////////////////////////////////////////////////////////////////////
-// Create a map object
+// Main entrance 
 ///////////////////////////////////////////////////////////////////////
-
-var myMap = L.map("map", {
-    center: [60.387172, -153.991983],
-    zoom: 5
-});
-
-// Adding tile layer
-L.tileLayer("https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}", {
-    attribution: "© <a href='https://www.mapbox.com/about/maps/'>Mapbox</a> © <a href='http://www.openstreetmap.org/copyright'>OpenStreetMap</a> <strong><a href='https://www.mapbox.com/map-feedback/' target='_blank'>Improve this map</a></strong>",
-    tileSize: 512,
-    maxZoom: 18,
-    zoomOffset: -1,
-    id: "mapbox/streets-v11",
-    accessToken: API_KEY
-}).addTo(myMap);
-
+// inital the map and set the center of map at 60.387172, -153.991983
+var myMap = initialMap([60.387172, -153.991983]);
 // Json URL for the earthquake above 2.5 
-earthquakeUrl = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/2.5_month.geojson";
+var earthquakeUrl = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/2.5_month.geojson";
+
+//grabbing GeoJson
+grabbingGeoJson(earthquakeUrl, myMap)
+
+// create Legend and popups
+addLegend().addTo(myMap);
+
+
+///////////////////////////////////////////////////////////////////////
+// main end 
+///////////////////////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////////////////////
 // function1: return the color by the depth 
@@ -63,60 +61,39 @@ function markerSize(mag) {
 ///////////////////////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////////////////////
-// Grabbing our GeoJSON data..
+// function3: initial map 
 ///////////////////////////////////////////////////////////////////////
-d3.json(earthquakeUrl, function (data) {
-
-
-    var earthquakeLocations = [];
-
-    // get each location data from array 
-    data.features.forEach(element => {
-
-        console.log(element.geometry.coordinates);
-        // if the coordinates is not empty
-        if (element.geometry.coordinates) {
-
-            //define a json 
-            var location = {
-                place: element.properties.place,
-                time: new Date(element.properties.time),
-                location: [element.geometry.coordinates[1], element.geometry.coordinates[0]],
-                depth: element.geometry.coordinates[2],
-                mag: element.properties.mag
-            };
-            //push the item into array
-            earthquakeLocations.push(location);
-        };
+function initialMap(coordinates) {
+    var myMap = L.map("map", {
+        center: coordinates,
+        zoom: 5
     });
 
-    ///////////////////////////////////////////////////////////////////////
-    // create circles and popups
-    ///////////////////////////////////////////////////////////////////////
+    // Adding tile layer
+    L.tileLayer("https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}", {
+        attribution: "© <a href='https://www.mapbox.com/about/maps/'>Mapbox</a> © <a href='http://www.openstreetmap.org/copyright'>OpenStreetMap</a> <strong><a href='https://www.mapbox.com/map-feedback/' target='_blank'>Improve this map</a></strong>",
+        tileSize: 512,
+        maxZoom: 18,
+        zoomOffset: -1,
+        id: "mapbox/streets-v11",
+        accessToken: API_KEY
+    }).addTo(myMap);
 
-    // for each location in the array
-    earthquakeLocations.forEach(element => {
-        // html for the popup marker
-        popupString = `<h3>Earthquake near ${element.place}</h3>`;
-        popupString += `<h3>Coordinates: ${element.location[0]}, ${element.location[1]}</h3> <hr>`;
-        popupString += `<h3>Magnitude: ${element.mag}</h3>`;
-        popupString += `<h3>Depth: ${element.depth} KM</h3>`;
-        popupString += `<h3>Magnitude: ${element.time}</h3>`;
+    return myMap;
 
-        // add circle and popup content
-        L.circle(element.location, {
-            stroke: true,
-            fillOpacity: 0.75,
-            color: "black",
-            fillColor: getColor(element.depth),
-            radius: markerSize(element.mag)
-        }).bindPopup(popupString).addTo(myMap);
 
-    })
+}
 
-    ///////////////////////////////////////////////////////////////////////
-    // create legends
-    ///////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////
+// function3: end 
+///////////////////////////////////////////////////////////////////////
+
+
+///////////////////////////////////////////////////////////////////////
+// function4: create legends
+///////////////////////////////////////////////////////////////////////
+
+function addLegend() {
     // Create a legend for the map
     var legend = L.control({ position: 'bottomright' });
     // Legend will be called once map is displayed
@@ -142,10 +119,49 @@ d3.json(earthquakeUrl, function (data) {
         return div;
     };
     // Add the legend to the map
-    legend.addTo(myMap);
-})
+    return legend;
 
+}
+///////////////////////////////////////////////////////////////////////
+// function4: end
+///////////////////////////////////////////////////////////////////////
 
+///////////////////////////////////////////////////////////////////////
+// function5: Grabbing our GeoJSON data..
+///////////////////////////////////////////////////////////////////////
+function grabbingGeoJson(earthquakeUrl, myMap) {
 
+    // Grabbing our GeoJSON data..
 
+    d3.json(earthquakeUrl, function (data) {
 
+        // get each location data from array 
+        data.features.forEach(element => {
+
+            // if the coordinates is not empty
+            if (element.geometry.coordinates) {
+
+                var popupString = `<h3>Earthquake near ${element.properties.place}</h3>`;
+                popupString += `<h3>Coordinates: ${element.geometry.coordinates[0]}, ${element.geometry.coordinates[1]}</h3> <hr>`;
+                popupString += `<h3>Magnitude: ${element.properties.mag}</h3>`;
+                popupString += `<h3>Depth: ${element.geometry.coordinates[2]} KM</h3>`;
+                popupString += `<h3>Magnitude: ${new Date(element.properties.time)}</h3>`;
+
+                // add circle and popup content
+                L.circle([element.geometry.coordinates[1], element.geometry.coordinates[0]], {
+                    stroke: true,
+                    fillOpacity: 0.75,
+                    color: "black",
+                    fillColor: getColor(element.geometry.coordinates[2]),
+                    radius: markerSize(element.properties.mag)
+                }).bindPopup(popupString).addTo(myMap);
+
+            };
+        });
+
+    })
+
+}
+///////////////////////////////////////////////////////////////////////
+// function5: end
+///////////////////////////////////////////////////////////////////////
