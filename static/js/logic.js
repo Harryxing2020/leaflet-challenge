@@ -24,9 +24,6 @@ link = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/2.5_month.geoj
 // function1: return the color by the depth 
 ///////////////////////////////////////////////////////////////////////
 
-
-
-
 function getColor(depth) {
 
     if (depth >= 90) {
@@ -45,7 +42,7 @@ function getColor(depth) {
         return '#FEB24C';
     }
     else if (depth >= -10 && depth < 10) {
-        return '#FEB24C';
+        return '#80ffdd';
     }
     else {
         return '#fff';
@@ -81,7 +78,7 @@ d3.json(link, function (data) {
             //define a json 
             var location = {
                 place: element.properties.place,
-                time: element.properties.time,
+                time: new Date(element.properties.time),
                 location: [element.geometry.coordinates[1], element.geometry.coordinates[0]],
                 depth: element.geometry.coordinates[2],
                 mag: element.properties.mag
@@ -98,7 +95,9 @@ d3.json(link, function (data) {
     // for each location in the array
     earthquakeLocations.forEach(element => {
         // html for the popup marker
-        popupString = `<h3>Locaton: ${element.place}</h3> <hr> <h3>Magnitude:${element.mag}</h3>`;
+        popupString = `<h3>Locaton: ${element.place}</h3> <hr>`;
+        popupString += `<h3>Magnitude:${element.time}</h3>`;
+        popupString += `<h3>Magnitude:${element.mag}</h3>`;
         popupString += `<h3>Depth:${element.depth} KM</h3>`;
 
         // add circle and popup content
