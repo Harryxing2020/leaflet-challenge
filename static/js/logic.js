@@ -95,16 +95,17 @@ d3.json(link, function (data) {
     // for each location in the array
     earthquakeLocations.forEach(element => {
         // html for the popup marker
-        popupString = `<h3>Locaton: ${element.place}</h3> <hr>`;
-        popupString += `<h3>Magnitude:${element.time}</h3>`;
-        popupString += `<h3>Magnitude:${element.mag}</h3>`;
-        popupString += `<h3>Depth:${element.depth} KM</h3>`;
+        popupString = `<h3>Earthquake near ${element.place}</h3>`;
+        popupString += `<h3>Coordinates: ${element.location[0]}, ${element.location[1]}</h3> <hr>`;
+        popupString += `<h3>Magnitude: ${element.mag}</h3>`;
+        popupString += `<h3>Depth: ${element.depth} KM</h3>`;
+        popupString += `<h3>Magnitude: ${element.time}</h3>`;
 
         // add circle and popup content
         L.circle(element.location, {
             stroke: true,
             fillOpacity: 0.75,
-            color: "pink",
+            color: "none",
             fillColor: getColor(element.depth),
             radius: markerSize(element.mag)
         }).bindPopup(popupString).addTo(myMap);
@@ -114,14 +115,20 @@ d3.json(link, function (data) {
     ///////////////////////////////////////////////////////////////////////
     // create legends
     ///////////////////////////////////////////////////////////////////////
-
+    // Create a legend for the map
     var legend = L.control({ position: 'bottomright' });
-
+    // Legend will be called once map is displayed
     legend.onAdd = function () {
 
         var div = L.DomUtil.create('div', 'info legend');
-        var limits = [-10, 10, 30, 50, 70, 90];
 
+        var legendInfo = "<p>Depth(KM)</p>";
+
+        div.innerHTML = legendInfo;
+
+        // setup the depth 
+        var limits = [-10, 10, 30, 50, 70, 90];
+        // Loop through our magnitude intervals and generate a label with a colored square for each interval
         for (var i = 0; i < limits.length; i++) {
             var newHtml = `<i style="background: ${getColor(limits[i])}"></i>`;
 
@@ -132,7 +139,7 @@ d3.json(link, function (data) {
 
         return div;
     };
-
+    // Add the legend to the map
     legend.addTo(myMap);
 })
 
