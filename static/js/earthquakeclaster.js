@@ -39,8 +39,6 @@ d3.json(newtry, function (response) {
             markers.addLayer(L.marker([location[1], location[0]])
                 .bindPopup(popupString));
         }
-
-
     });
     // add the cluster marker into map
     myMap.addLayer(markers);
